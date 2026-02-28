@@ -1,0 +1,18 @@
+# LaTeX junk
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# macOS junk
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# optional
+output/
