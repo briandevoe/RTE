@@ -16,3 +16,6 @@ __pycache__/
 
 # optional
 output/
+
+# Ranga's course materials
+course/
