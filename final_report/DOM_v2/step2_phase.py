@@ -83,7 +83,6 @@ def precompute_G_qq(mu, phi, N, M, omega_L, tau_L):
                 for j in range(1, M+1):
                     G_qq[n, m, i, j] = gamma_scalar(
                         mu[n], phi[m], mu[i], phi[j], omega_L, tau_L)
-    print("  Done.")
     return G_qq
 
 

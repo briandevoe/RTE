@@ -9,9 +9,15 @@ for a standard parameter sweep.
 # =============================================================================
 # SPECTRAL PARAMETERS
 # =============================================================================
-rho_L = 0.06     # leaf single-sided reflectance   (RED band default)
-tau_L = 0.04     # leaf single-sided transmittance  (RED band default)
-rho_g = 0.10     # Lambertian ground reflectance
+# RED band
+# rho_L = 0.06     # leaf reflectance
+# tau_L = 0.04     # leaf transmittance
+# rho_g = 0.10     # ground reflectance
+
+# NIR band
+rho_L = 0.45     # leaf reflectance
+tau_L = 0.45     # leaf transmittance
+rho_g = 0.15     # ground reflectance
 
 # =============================================================================
 # ILLUMINATION GEOMETRY

@@ -14,7 +14,7 @@ brf_at_view(view_zenith_deg, view_azimuth_deg,
 
 import math
 import numpy as np
-from phase import gamma_scalar
+from step2_phase import gamma_scalar
 
 
 def brf_at_view(view_zenith_deg, view_azimuth_deg,
