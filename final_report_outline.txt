@@ -1,0 +1,408 @@
+================================================================================
+EE645 PHYSICAL MODELS IN REMOTE SENSING — FINAL REPORT OUTLINE
+Spring 2026 | Prof. Ranga B. Myneni | Boston University
+Deadline: Monday, May 4, 2026 @ 9:00 AM (email PDF)
+================================================================================
+
+REPORT STRUCTURE
+----------------
+The report consists of:
+  - ONE Energy Balance Table (from Step 01 run)
+  - ELEVEN Figures, each on its own page with a written explanation
+
+There is no formal intro or conclusion section required — the figures and their
+explanations ARE the report. Each figure caption/explanation should describe
+what physical information is conveyed by that figure.
+
+
+================================================================================
+PART I: REPORT CONTENT — FIGURE BY FIGURE
+================================================================================
+
+--------------------------------------------------------------------------------
+ENERGY BALANCE TABLE (Slide 2 reference)
+--------------------------------------------------------------------------------
+  What it shows: Canopy energy budget at RED and NIR wavelengths, for
+                 LAI = 1.5 and LAI = 4.0. Columns include BHR (or DHR),
+                 transmittance, canopy absorptance, and energy imbalance %.
+  Sanity check: RED, LAI=1.5 should converge in ~3 iterations with
+                imbalance = +0.095% (per DOM_Full_Guide.pdf).
+  Source: Run DOM_v3/main.py with fdir=1 (input "0" = no BRF interpolation)
+          for 4 configurations: {RED, NIR} x {LAI=1.5, LAI=4.0}.
+
+--------------------------------------------------------------------------------
+FIG. 01 — Leaf Angle Distributions (Slide 3)
+--------------------------------------------------------------------------------
+  What it shows: The six leaf inclination angle distribution functions
+                 g_L(theta_L) plotted vs. theta_L from 0 to 90 degrees.
+                 Distributions: Uniform, Planophile, Erectophile,
+                 Plagiophile, Extremophile, Spherical.
+  Physics: Each distribution describes the statistical orientation of leaves
+           in the canopy. Planophile canopies have mostly horizontal leaves;
+           erectophile canopies have mostly vertical leaves.
+  Code: code/figure01.ipynb  ← DONE
+  Status: COMPLETE
+
+--------------------------------------------------------------------------------
+FIG. 02 — G-Function for Various Leaf Angle Distributions (Slide 4)
+--------------------------------------------------------------------------------
+  What it shows: The G-function G(theta) vs. solar/view zenith angle (0-90°)
+                 for the five main LADs (Uniform, Planophile, Erectophile,
+                 Plagiophile, Extremophile). Horizontal reference at G=0.5.
+  Physics: G(theta) is the Ross-Nilson geometry factor — the mean projection
+           of unit leaf area onto a plane normal to the direction theta.
+           All distributions satisfy: (1/2pi) * integral G dOmega = 0.5.
+  Code: code/figure02.ipynb  ← DONE
+  Status: COMPLETE
+
+--------------------------------------------------------------------------------
+FIG. 03 — Scattering Phase Function for Uniform LAD (Slide 5)
+--------------------------------------------------------------------------------
+  What it shows: The bi-Lambertian area scattering phase function
+                 Gamma_LD,U(cos_beta) for uniform leaf angle distribution,
+                 plotted for several transmittance-to-albedo ratios (tau/omega
+                 from 0.0 to 0.5).
+  Physics: The phase function governs how a leaf scatters incident radiation.
+           Forward scattering (transmission) vs. backward scattering
+           (reflection) balance depends on leaf optical properties.
+  Code: code/figure03.ipynb  ← DONE
+  Status: COMPLETE
+
+--------------------------------------------------------------------------------
+FIG. 04 — Uncollided Radiation Profile, RED Band (Slide 6)
+--------------------------------------------------------------------------------
+  What it shows: Downward and upward uncollided irradiance vs. cumulative LAI
+                 (depth into canopy) for the RED wavelength band.
+  Physics: Uncollided radiation follows Beer-Lambert attenuation — photons
+           that have not yet scattered off any leaf surface. Downward direct
+           beam decays exponentially; upward component comes from ground
+           reflection.
+  Code: code/dom_uncollided.py  → outputs code/uncollided_dom_RED.png
+  Status: PNG EXISTS — verify image is final and use in report.
+
+--------------------------------------------------------------------------------
+FIG. 05 — Uncollided Radiation Profile, NIR Band (Slide 6)
+--------------------------------------------------------------------------------
+  What it shows: Same as Fig. 04 but for the NIR wavelength band.
+  Physics: NIR has higher leaf albedo (rho_L + tau_L ~ 0.9) compared to RED
+           (~0.09 for red-absorbing vegetation), so the uncollided profile
+           decays at a different rate.
+  Code: code/dom_uncollided.py  → outputs code/uncollided_dom_NIR.png
+  Status: PNG EXISTS — verify image is final and use in report.
+
+--------------------------------------------------------------------------------
+FIG. 06 — HDRF Angular Shape, fdir = 1 (pure direct beam) (Slide 7)
+--------------------------------------------------------------------------------
+  What it shows: BRF (technically DHR since fdir=1) plotted over 45 x 90
+                 view directions — polar or 2D contour plot of the angular
+                 reflectance distribution in the upper hemisphere.
+  Physics: With purely direct illumination, the canopy BRF shows a
+           hot-spot peak in the retro-illumination direction and a bowl
+           shape away from it. The principal plane cross-section is the
+           most physically informative slice.
+  Code: code/figure06.ipynb  ← NEEDS TO BE WRITTEN
+  Requires:
+    - Run DOM_v3 with fdir=1.0 (or appropriate config)
+    - Loop BRF computation over 45 zenith angles x 90 azimuth angles
+    - Plot as polar contour map or 2D image
+  Status: NOT DONE
+
+--------------------------------------------------------------------------------
+FIG. 07 — HDRF Angular Shape, fdir = 0.7 (mixed illumination) (Slide 8)
+--------------------------------------------------------------------------------
+  What it shows: Same angular plot as Fig. 06 but with fdir=0.7 (70% direct,
+                 30% diffuse illumination). Slide note: "Y axis says BRF,
+                 it is really HDRF because fdir=0.7 — no error in calculation."
+  Physics: Adding diffuse illumination softens the hot-spot effect and fills
+           in dark angular regions, producing a rounder, more symmetric
+           reflectance pattern.
+  Code: code/figure07.ipynb  ← NEEDS TO BE WRITTEN
+  Requires:
+    - Same as Fig. 06 but set fdir=0.7 in config
+    - Reuse the same 45x90 sweep infrastructure
+  Status: NOT DONE
+
+--------------------------------------------------------------------------------
+FIG. 08 — BHR as Function of LAI and Soil Brightness (Slide 9)
+--------------------------------------------------------------------------------
+  What it shows: Bihemispherical Reflectance (BHR) vs. LAI for two soil
+                 conditions: dark soil (rho_g = 0.01) and bright soil
+                 (rho_g = 0.3). At least RED and NIR bands shown.
+  Physics: As LAI increases, canopy "hides" the soil. For dark soil, BHR
+           increases with LAI (leaves are brighter than soil). For bright
+           soil, BHR may decrease or plateau as leaves replace bright soil.
+           Asymptotes to canopy-only reflectance at very high LAI.
+  Code: code/figure08.ipynb  ← NEEDS TO BE WRITTEN
+  Requires:
+    - Loop over LAI values (e.g., 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0)
+    - For each LAI, run DOM_v3 twice: rho_g=0.01 and rho_g=0.3
+    - Extract BHR from energy balance output
+    - Plot 4 curves: RED+dark, RED+bright, NIR+dark, NIR+bright
+  Status: NOT DONE
+
+--------------------------------------------------------------------------------
+FIG. 09 — LAI Effect on BHR and Transmittance (Slide 10)
+--------------------------------------------------------------------------------
+  What it shows: Both BHR and canopy Transmittance plotted vs. LAI.
+                 May show RED and NIR bands together.
+  Physics: As LAI increases, transmittance decreases monotonically (more
+           leaves intercept radiation). BHR has a more complex LAI
+           dependence based on scattering properties.
+  Code: code/figure09.ipynb  ← NEEDS TO BE WRITTEN
+  Requires:
+    - Same LAI sweep as Fig. 08
+    - Extract both BHR and Transmittance from energy balance dict
+    - Can reuse the parameter sweep loop from figure08.ipynb
+  Status: NOT DONE
+
+--------------------------------------------------------------------------------
+FIG. 10 — Solar Polar Angle Effect on BHR and Transmittance (Slide 11)
+--------------------------------------------------------------------------------
+  What it shows: BHR and Transmittance vs. solar zenith angle (theta_solar),
+                 at fixed LAI (likely 1.5 or 4.0).
+  Physics: At low solar zenith angles (overhead sun), radiation penetrates
+           deep into the canopy. At high zenith (low sun), radiation is
+           intercepted near the top. BHR and transmittance both depend
+           strongly on the geometry of illumination relative to leaf angles.
+  Code: code/figure10.ipynb  ← NEEDS TO BE WRITTEN
+  Requires:
+    - Loop over theta_solar values (e.g., 0, 10, 20, 30, 40, 50, 60, 70, 80 deg)
+    - For each, run DOM_v3 and extract BHR + Transmittance
+    - Plot two curves: BHR vs. theta_solar, Trans vs. theta_solar
+    - Note: config.py uses theta_solar in degrees (convention: 140 deg = 40 deg SZA)
+  Status: NOT DONE
+
+--------------------------------------------------------------------------------
+FIG. 11 — Comparison with Field Data (Slides 12-13)
+--------------------------------------------------------------------------------
+  What it shows: Model HDRF vs. field-measured HDRF in the principal plane
+                 for Konza Prairie (Kansas grassland), both RED and NIR bands.
+  Field data (from slide 12 — Konza Prairie, principal plane):
+    Negative angles = back-scatter, positive = forward-scatter
+    RED BAND:
+      -80: 0.127  -65: 0.096  -45: 0.072  -30: 0.054  -20: 0.043
+      -10: 0.043    0: 0.038  +10: 0.038  +20: 0.047  +30: 0.047
+      +45: 0.053  +70: 0.070  +80: 0.116
+    NIR BAND:
+      -80: 0.835  -65: 0.650  -40: 0.505  -25: 0.390  -15: 0.330
+       -5: 0.305  +10: 0.345  +15: 0.350  +28: 0.370  +40: 0.490
+      +55: 0.635  +70: 0.635  +80: 0.890
+  Physics: Validates the DOM model against real measurements. Agreement
+           shows the model captures key canopy reflectance features: bowl
+           shape, hot-spot, backscatter enhancement. Disagreements reveal
+           model assumptions (e.g., uniform canopy, flat terrain).
+  Code: code/figure11.ipynb  ← NEEDS TO BE WRITTEN
+  Requires:
+    - Hardcode field data arrays (above) in notebook
+    - Run DOM_v3 in principal plane: vary view zenith from -80 to +80 deg
+      at fixed solar azimuth (phi_view = 0 = principal plane)
+    - fdir should match field conditions (likely fdir=1 or need to determine)
+    - Extract HDRF at each view angle
+    - Plot: field data (scatter/circles) vs. model (solid line) for RED & NIR
+  Status: NOT DONE
+
+
+================================================================================
+PART II: CODE INVENTORY
+================================================================================
+
+--- EXISTING CODE (18 files total — review and verify before use) ---
+
+LECTURE/VERIFICATION SCRIPTS (4 files):
+  lectures/01-Gauss_Quadrature.py      Gauss-Legendre quadrature, orders 4-12
+  lectures/02-LAD_Verify.py            LAD normalization verification (5 dists)
+  lectures/03-G_Verify_Uni_hL.py       G-function identity check, uniform hL
+  lectures/04-G_Verify_NonUni_hL.py    G-function identity check, non-uniform hL
+
+DEMONSTRATION NOTEBOOKS (2 files):
+  code/01_Gauss_Quadrature.ipynb       Quadrature walkthrough
+  code/02_LAD_Verification.ipynb       LAD normalization walkthrough
+
+FIGURE NOTEBOOKS — COMPLETE (3 files):
+  code/figure01.ipynb                  Fig. 01: Leaf angle distributions
+  code/figure02.ipynb                  Fig. 02: G-functions
+  code/figure03.ipynb                  Fig. 03: Phase function
+
+UNCOLLIDED DOM CODE (2 files + 2 PNGs):
+  code/dom_student.py                  Student version of full DOM solver
+  code/dom_uncollided.py               Uncollided field only → Figs. 04 & 05
+  code/uncollided_dom_RED.png          Fig. 04 output (verify this is final)
+  code/uncollided_dom_NIR.png          Fig. 05 output (verify this is final)
+
+DOM_v3 FULL SOLVER SUITE (7 files):
+  final_report/DOM_v3/config.py              All simulation parameters
+  final_report/DOM_v3/main.py                Pipeline orchestrator (NEEDS FIXES)
+  final_report/DOM_v3/step2_phase_rewrite.py Bi-Lambertian phase function
+  final_report/DOM_v3/step3_uncollided_rewrite.py  Uncollided field solver
+  final_report/DOM_v3/step4_collided_rewrite.py    Iterative collided solver
+  final_report/DOM_v3/step5_energy_rewrite.py      Energy balance
+  final_report/DOM_v3/step6_brf_rewrite.py         BRF at view directions
+
+--- KNOWN ISSUES IN EXISTING CODE ---
+
+  main.py:
+    - BRF values are computed but NOT printed/logged (lines ~91-96)
+    - Only runs a single configuration — need multi-config loop
+    - No 45x90 view direction sweep implemented yet
+
+  step4_collided_rewrite.py:
+    - Uses clip-to-positive fix-up (lines ~112, 127) — may mask physics issues
+    - Convergence checked on scalar irradiance only (not full spectral field)
+
+--- CODE THAT NEEDS TO BE WRITTEN (7 tasks) ---
+
+  TASK 1 — Fix final_report/DOM_v3/main.py
+    - Add formatted energy balance table print (for 4 configs: RED/NIR x LAI 1.5/4.0)
+    - Add outer loop over configurations
+    - Add 45x90 BRF sweep for Figs. 06 and 07
+    - Expose fdir, rho_g, LAI, theta_solar as parameters (not hard-coded in config)
+
+  TASK 2 — code/figure06.ipynb  (NEW)
+    - Import DOM_v3 suite
+    - Run with fdir=1.0, LAI=1.5 (or 4.0), RED and NIR
+    - Sweep 45 zenith x 90 azimuth view directions via step6_brf_rewrite.brf_at_view()
+    - Plot as polar contour map of BRF; label hot-spot direction
+
+  TASK 3 — code/figure07.ipynb  (NEW)
+    - Same as TASK 2 but config fdir=0.7
+    - Note in figure caption that fdir=0.7 means output is HDRF, not BRF
+
+  TASK 4 — code/figure08.ipynb  (NEW)
+    - LAI sweep: [0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0]
+    - Two soil configs: rho_g=0.01, rho_g=0.3
+    - Extract BHR from energy balance output for each run
+    - 4 curves: RED/dark, RED/bright, NIR/dark, NIR/bright vs. LAI
+
+  TASK 5 — code/figure09.ipynb  (NEW)
+    - Reuse LAI sweep from TASK 4 (can import helper function)
+    - Extract both BHR and Transmittance at each LAI
+    - Two-panel or overlaid plot; show RED and NIR separately
+
+  TASK 6 — code/figure10.ipynb  (NEW)
+    - Solar zenith sweep: theta_solar_deg in [0, 10, 20, 30, 40, 50, 60, 70, 80]
+      (Note: config stores 180-SZA or direct SZA — check convention in config.py)
+    - Fixed LAI (e.g., 1.5 or 4.0), RED and NIR
+    - Extract BHR and Transmittance at each solar angle
+    - Plot vs. solar zenith angle (0=overhead, 90=horizon)
+
+  TASK 7 — code/figure11.ipynb  (NEW)
+    - Hardcode Konza Prairie field measurements (see data above in Fig. 11 section)
+    - Run DOM_v3 in principal plane: view angles from -80 to +80 in ~5 deg steps
+      (phi_view = 0 for back-scatter half, phi_view = 180 for forward-scatter half,
+       or use signed zenith convention — confirm with dom code)
+    - fdir = 1.0 (assume direct beam; adjust if field data specifies otherwise)
+    - Extract model HDRF at each view zenith
+    - Plot: RED scatter+model, NIR scatter+model (2 panels or 1 panel with legend)
+
+
+================================================================================
+PART III: STEP-BY-STEP COMPLETION PLAN
+================================================================================
+
+STEP A — Verify DOM_v3 Core (do this first)
+  [ ] Run main.py as-is; confirm energy balance table appears
+  [ ] Check RED, LAI=1.5 converges in ~3 iterations, imbalance ~ +0.095%
+  [ ] Fix BRF print output (Task 1 above)
+  [ ] Confirm DOM_v3 can be called programmatically from notebooks (import paths)
+
+STEP B — Confirm Figs. 01-03 (mostly done, quick verification)
+  [ ] Run figure01.ipynb → save/export Fig. 01 as PNG or PDF
+  [ ] Run figure02.ipynb → save/export Fig. 02
+  [ ] Run figure03.ipynb → save/export Fig. 03
+
+STEP C — Confirm Figs. 04-05 (PNGs already exist)
+  [ ] Open and inspect uncollided_dom_RED.png and uncollided_dom_NIR.png
+  [ ] If acceptable, these are ready for the report
+  [ ] If not, re-run code/dom_uncollided.py to regenerate
+
+STEP D — Generate Energy Balance Table (Step 01 of assignment)
+  [ ] Run DOM_v3 four times: RED/LAI=1.5, RED/LAI=4.0, NIR/LAI=1.5, NIR/LAI=4.0
+  [ ] Use fdir=1.0 (all direct) for the "Step 01" table run
+  [ ] Capture and format the table for report inclusion
+
+STEP E — Build 45x90 BRF Sweep Infrastructure (needed for Figs. 06-07, 11)
+  [ ] Implement the view-direction loop (45 zenith x 90 azimuth) in a helper
+      function or within main.py
+  [ ] Test that brf_at_view() handles all zenith angles without crashing
+
+STEP F — Create Figs. 06-07 (BRF/HDRF Angular Maps)
+  [ ] Write and run code/figure06.ipynb (fdir=1.0)
+  [ ] Write and run code/figure07.ipynb (fdir=0.7)
+
+STEP G — Create Figs. 08-10 (Parameter Sweeps)
+  [ ] Write and run code/figure08.ipynb (BHR vs. LAI and soil)
+  [ ] Write and run code/figure09.ipynb (BHR & Trans vs. LAI)
+  [ ] Write and run code/figure10.ipynb (BHR & Trans vs. solar angle)
+
+STEP H — Create Fig. 11 (Field Comparison)
+  [ ] Write and run code/figure11.ipynb using hardcoded Konza Prairie data
+  [ ] Tune model configuration to match field conditions as closely as possible
+
+STEP I — Write Figure Explanations
+  [ ] For each of the 11 figures, write 3-6 sentences explaining:
+        - What is being plotted (axes, units, legend entries)
+        - What physics it demonstrates
+        - What the key takeaway or trend is
+  [ ] Keep explanations factual and tied to radiative transfer theory
+
+STEP J — Assemble PDF and Submit
+  [ ] Compile report: Energy table + 11 pages (one figure + explanation each)
+  [ ] Use final_report/documentation.tex as a starting point (LaTeX already exists)
+  [ ] Export to PDF
+  [ ] Email PDF to Prof. Myneni by May 4, 2026 @ 9:00 AM
+
+
+================================================================================
+PART IV: CODE SUMMARY COUNTS
+================================================================================
+
+EXISTING FILES (ready or near-ready):
+  Lecture/verification scripts:    4
+  Demo Jupyter notebooks:          2
+  Figure notebooks (done):         3  (Figs. 01-03)
+  Uncollided DOM scripts:          2  (dom_student.py, dom_uncollided.py)
+  Existing figure PNGs:            2  (Figs. 04-05)
+  DOM_v3 solver modules:           7  (config + main + 5 steps)
+  -----------------------------------------------
+  Total existing code files:      18 (+2 PNGs)
+
+NEW CODE TO WRITE:
+  Fix DOM_v3/main.py:              1 (modification to existing file)
+  New figure notebooks:            6  (figure06 through figure11)
+  -----------------------------------------------
+  Total new code tasks:            7
+
+TOTAL CODE FILES WHEN COMPLETE:  24 (Python/notebooks) + 2 PNGs
+
+ESTIMATED COMPLEXITY:
+  - Tasks A-D (verification + table): LOW — mostly run existing code
+  - Task E (45x90 sweep infra):       MEDIUM — loop over step6_brf_rewrite
+  - Tasks F-G (param sweeps):         MEDIUM — boilerplate with DOM calls
+  - Task H (field comparison):        MEDIUM — need to match field geometry
+  - Tasks I-J (writing + PDF):        LOW-MEDIUM — mostly prose and LaTeX
+
+
+================================================================================
+NOTES AND REMINDERS
+================================================================================
+
+- The "reflectance" in the energy balance table is DHR when fdir=1, or BHR
+  when fdir < 1. Make sure config matches what the assignment asks for each run.
+
+- Solar angle convention: check whether theta_solar in config.py is the
+  solar zenith angle (SZA) directly or its complement. The current config
+  shows theta_solar=140, which likely means 180-40=140 deg in some convention,
+  equivalent to SZA=40 deg. Confirm before building the solar angle sweep.
+
+- For Fig. 11, the field data has unequal angular sampling in RED vs NIR bands.
+  Run the model at all unique view angles from both bands.
+
+- The existing LaTeX file at final_report/documentation.tex is a good starting
+  point for assembling the final PDF report.
+
+- DOM_v3 imports: When calling DOM_v3 from notebooks in code/, you will need
+  to add final_report/ to sys.path or use relative imports. Plan for this.
+
+================================================================================
+END OF OUTLINE
+================================================================================
