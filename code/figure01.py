@@ -40,7 +40,7 @@ ax.set_xlim(0, 90)
 ax.set_ylim(0, None)
 plt.tight_layout()
 
-out_dir  = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'figures')
+out_dir  = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'figures')
 os.makedirs(out_dir, exist_ok=True)
 out_path = os.path.join(out_dir, 'figure01_gauss_quadrature.png')
 plt.savefig(out_path, dpi=150, bbox_inches='tight')

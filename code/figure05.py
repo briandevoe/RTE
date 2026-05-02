@@ -48,7 +48,7 @@ for lai in LAI_LIST:
 
 fig = make_three_panel_plots(results[0], results[1], 'NIR', LAI_LIST)
 
-out_dir = os.path.join(CODE_DIR, 'figures')
+out_dir = os.path.join(os.path.dirname(CODE_DIR), 'figures')
 os.makedirs(out_dir, exist_ok=True)
 out_path = os.path.join(out_dir, 'figure05_uncollided_NIR.png')
 fig.savefig(out_path, dpi=150, bbox_inches='tight')

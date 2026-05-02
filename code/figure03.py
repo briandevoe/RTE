@@ -40,7 +40,7 @@ ax.set_ylim(0, None)
 ax.grid(alpha=0.3)
 plt.tight_layout()
 
-out_dir  = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'figures')
+out_dir  = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'figures')
 os.makedirs(out_dir, exist_ok=True)
 out_path = os.path.join(out_dir, 'figure03_phase_function.png')
 plt.savefig(out_path, dpi=150, bbox_inches='tight')

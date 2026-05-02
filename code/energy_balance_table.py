@@ -21,8 +21,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-DOM_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                       '..', 'final_report', 'DOM_v3'))
+DOM_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'DOM_v3'))
 sys.path.insert(0, DOM_DIR)
 
 from step2_phase_rewrite      import precompute_G_qq, precompute_G_sol
@@ -183,7 +182,7 @@ ax.text(0.5, 0.02,
         transform=ax.transAxes)
 
 plt.tight_layout()
-out_dir = os.path.join(os.path.dirname(__file__), 'figures')
+out_dir = os.path.join(os.path.dirname(__file__), '..', 'figures')
 os.makedirs(out_dir, exist_ok=True)
 out_path = os.path.join(out_dir, 'energy_balance_table.png')
 plt.savefig(out_path, dpi=150, bbox_inches='tight')

@@ -20,7 +20,7 @@ import matplotlib.image as mpimg
 from matplotlib.backends.backend_pdf import PdfPages
 
 CODE_DIR    = os.path.dirname(os.path.abspath(__file__))
-FIGURES_DIR = os.path.join(CODE_DIR, 'figures')
+FIGURES_DIR = os.path.join(os.path.dirname(CODE_DIR), 'figures')
 OUTPUT_PDF  = os.path.join(FIGURES_DIR, 'EE645_report_figures.pdf')
 
 # ---------------------------------------------------------------------------
